@@ -1,29 +1,33 @@
 console.log("hello world");
 function add_new_task(){
-    let new_task=document.querySelector(".create_tasks input");
-    let all_task_box=document.querySelector(".all_tasks");
-    let new_task_value=new_task.value;
+    const new_task = document.querySelector(".create_tasks input");
+    const all_task_box = document.querySelector(".all_tasks");
+    const new_task_value = new_task.value;
 
     if(new_task_value){
-        let r = (Math.random() + 1).toString(36).substring(7);
-
-        let old_html=all_task_box.innerHTML;
-        let new_task_box = "<div class='' id='"+r+"'><span class='delete' onclick='remove_task()'>X</span> <span>"+new_task_value+"</span> <span onclick='complete_task()'>✔</span></div>";
-        all_task_box.innerHTML=old_html+new_task_box;
-        new_task.value="";
+        const taskId = (Math.random() + 1).toString(36).substring(7);
+        const taskElement = document.createElement('div');
+        taskElement.setAttribute('id', taskId);
+        taskElement.innerHTML = `<span class='delete'>X</span> <span>${new_task_value}</span> <span class='complete'>✔</span>`;
+        all_task_box.appendChild(taskElement);
+        new_task.value = "";
     }
-    console.log(new_task_value);
 }
 
-function remove_task(){
-    let element = event.target;
-    let parent=element.parentElement.innerHTML;
-    let all_task_box=document.querySelector(".all_tasks");  
-    let new_task_box=all_task_box.innerHTML.replace(parent, "");
-    all_task_box.innerHTML=new_task_box;
+document.querySelector('.all_tasks').addEventListener('click', function(event) {
+    if(event.target.classList.contains('delete')) {
+        remove_task(event.target);
+    } else if(event.target.classList.contains('complete')) {
+        complete_task(event.target);
+    }
+});
+
+function remove_task(element){
+    const parent = element.parentElement;
+    parent.remove();
 }
-function complete_task(){
-    let element = event.target;
-    let parent=element.parentElement;
+
+function complete_task(element){
+    const parent = element.parentElement;
     parent.classList.add("completed");
 }
