@@ -8,7 +8,67 @@
 }
 .delete{
     cursor: pointer;
+    position: absolute;
+}
+.complete{
+    cursor: pointer;
 }
 .completed{
     text-decoration: line-through;
+}
+textarea {
+    resize: none;
+}
+.new_task_wrapper{
+    margin: auto;
+    background-color: green;
+    position: absolute;
+    width: 880px;
+    height: 50%;
+    justify-content: center;
+}
+.creating_tasks_section{
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+.submit_task{
+    padding: 10px 20px;
+    margin-top: 20px ;    
+}
+.new_task{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: flex-start;
+    align-items: center;
+
+}
+.task{
+    display: flex;
+    background-color: aqua;
+    justify-content: space-between;
+    width: 70%;
+    padding: 20px;
+    position: relative;
+}
+.all_tasks{
+    width: 880px;
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+#taskdescription{
+    width: 177px;
+    padding: 5px;
+}
+#taskname{
+    width: 177px;
+    padding: 5px;
+}
+.new_task_name{
+    padding-left: 20px;
 }

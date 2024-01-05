@@ -8,12 +8,25 @@
 </head>
 <body>
     <div class="main">
-        <section class="create_tasks_wrapper">
-            <div class="create_tasks">
-                <input type="text" />
+        <section class="creating_tasks_section">
+            <div class="new_task_wrapper" style="display: none">
+                <div class="new_task">
+                    <div class="input_fields">
+                        <div class="input_field_task_name">
+                            <h2>Taskname</h2>
+                            <input id="taskname" type="text" />
+                        </div>
+                        <div class="input_field_task_description" style="display: none;">
+                            <h2>Taskdescription</h2>
+                            <textarea id="taskdescription" autocapitalize="on" type="text"></textarea>
+                        </div>
+                    </div>
+                    <button class="submit_task" onclick="submitNewTask()"><span>Senden</span></button>
+                </div>
             </div>
-            <div>
-                <button class="add_task" onclick="add_new_task()">
+        </section>
+        <section class="create_tasks_wrapper">
+                <button class="add_task" onclick="initializeTaskCreation()">
                     <span>
                         Add new task
                     </span>
