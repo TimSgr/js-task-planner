@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css">
+
 </head>
 <body>
     <div class="main">
         <section class="creating_tasks_section">
             <div class="new_task_wrapper" style="display: none">
+                <img class="close_icon" src="assets/img/icon-close-4.svg">
                 <div class="new_task">
                     <div class="input_fields">
                         <div class="input_field_task_name">
@@ -19,6 +22,13 @@
                         <div class="input_field_task_description" style="display: none;">
                             <h2>Taskdescription</h2>
                             <textarea id="taskdescription" autocapitalize="on" type="text"></textarea>
+                        </div>
+                        <div class="input_field_task_checkbox">
+                            <h2>Taskdescription</h2>
+                            <input type="checkbox" id="duedate" name="duedate" value="Fälligkeitsdatum"  onclick="validate()">
+                            <label for="duedate">Fälligkeitsdatum</label><br>
+                            <input type="date" id="datepicker" name="trip-start" min="2022-01-01" max="2025-12-31" style="display: none" />
+
                         </div>
                     </div>
                     <button class="submit_task" onclick="submitNewTask()"><span>Senden</span></button>
@@ -37,6 +47,7 @@
         </section>
     </div>
     <script src="/assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker.min.js"></script>
 
 </body>
 </html>

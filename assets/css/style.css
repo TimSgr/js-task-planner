@@ -44,13 +44,18 @@ textarea {
     align-items: center;
 
 }
-.task{
-    display: flex;
+.whole_task{
+    display: block;
     background-color: aqua;
-    justify-content: space-between;
     width: 70%;
     padding: 20px;
     position: relative;
+}
+.task{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
 }
 .all_tasks{
     width: 880px;
@@ -71,4 +76,18 @@ textarea {
 }
 .new_task_name{
     padding-left: 20px;
+    width: 100%;
+    height: 100%;
+}
+.close_icon{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 30px;
+    top: 20px;
+    cursor: pointer;
+}
+.expanded .task_details{
+    display: block !important;
+    max-height:fit-content !important;
 }
