@@ -13,7 +13,7 @@
 .complete{
     cursor: pointer;
 }
-.completed{
+.completed .new_task_name{
     text-decoration: line-through;
 }
 textarea {
@@ -89,4 +89,19 @@ textarea {
 .expanded .task_details{
     display: block !important;
     max-height:fit-content !important;
+}
+.container{
+    border: 1px solid black;
+    box-shadow: 3px 3px black;
+    border-radius: 5px;
+    padding: 10px 0px;
+}
+.task_description{
+    word-wrap: break-word;
+}
+.expanded .expand-icon img{
+    transform: rotate(180deg);
+}
+.expand-icon{
+    cursor: pointer;
 }

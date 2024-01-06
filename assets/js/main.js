@@ -33,7 +33,7 @@ allTasksBox.addEventListener('click', function(event) {
         removeTask(event.target);
     } else if (event.target.classList.contains('complete')) {
         completeTask(event.target);
-    } else if (event.target.classList.contains('new_task_name')){
+    } else if (event.target.classList.contains('new_task_name') || event.target.classList.contains('expand-icon')){
         expand_minimize_details(event.target);
     }
 });
@@ -45,8 +45,12 @@ function removeTask(element) {
 }
 
 function completeTask(element) {
-    const parent = element.parentElement;
-    parent.classList.add("completed");
+    const parent = element.parentElement.parentElement;
+    if(parent.classList.contains('completed')){
+        parent.classList.remove("completed");
+    }else{
+        parent.classList.add("completed");
+    }
 }
 
 function expand_minimize_details(element){
@@ -72,7 +76,7 @@ function submitNewTask() {
         // Closing Icon
         const colCloseIcon = document.createElement('div');
         colCloseIcon.className = "col-md-1";
-        colCloseIcon.innerHTML = "<span class='delete'>X</span>";
+        colCloseIcon.innerHTML = "<span class='complete'>✔</span>";
 
         // Task Content
         const colTaskContent = document.createElement('div');
@@ -91,15 +95,19 @@ function submitNewTask() {
         taskDetailsDiv.style.display="none";
         taskDetailsDiv.className = 'task_details';
 
-        taskDetailsDiv.innerHTML = `<span>${datepicker.value}</span><br><span>${newTaskDescription.value}</span>`;
+        taskDetailsDiv.innerHTML = `
+            <h4>Fälligkeitsdatum: </h4><span>${datepicker.value}</span>
+            <br>
+            <h4>Taskbeschreibung: </h4><span class="task_description">${newTaskDescription.value}</span>
+        `;
 
         colTaskContent.appendChild(taskNameDiv);
         colTaskContent.appendChild(taskDetailsDiv);
 
         // Checking Icon
         const colCheckIcon = document.createElement('div');
-        colCheckIcon.className = "col-md-1";
-        colCheckIcon.innerHTML = "<span class='complete'>✔</span>";
+        colCheckIcon.className = "col-md-1 expand-icon";
+        colCheckIcon.innerHTML = "<img class='expand-icon' src='/assets/img/Vector-1.svg' >";
 
         // Assembling the row
         row.appendChild(colCloseIcon);
