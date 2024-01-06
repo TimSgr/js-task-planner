@@ -11,6 +11,7 @@ const datepicker = document.querySelector('#datepicker');
 
 closeIcon.addEventListener('click', function(){
     newTaskWrapper.style.display = "none";
+    allTasksBox.style.paddingTop = "0px";
 });
 
 function initializeTaskCreation() {
@@ -58,43 +59,67 @@ function expand_minimize_details(element){
 }
 
 function submitNewTask() {
-    if (newTaskName) {
+    if (newTaskName.value.trim() !== "") {
         newTaskWrapper.style.display = "none";
         allTasksBox.style.paddingTop = "0px";
-        const wholeTask = document.createElement('div');
-        wholeTask.className = "whole_task";
-        const taskElement = document.createElement('div');
-        taskElement.className = 'task';
-        taskElement.innerHTML = `
-            <span class='delete'>X</span>
-            <span class="new_task_name">${newTaskName.value}</span>
-            <span class='complete'>✔</span>
-        `;
-        const taskDetails = document.createElement('div');
-        taskDetails.style.maxHeight="0px";
-        taskDetails.style.display="none";
-        taskDetails.className = 'task_details';
 
-        taskDetails.innerHTML = `
-            <div class="">
-                <span class="">${datepicker.value}</span>  
-            </div>
-            <div class="">
-                <span class="">${newTaskDescription.value}</span>
-            </div>
-        `;
-        wholeTask.appendChild(taskElement);
-        wholeTask.appendChild(taskDetails);
-        allTasksBox.appendChild(wholeTask);
+        const container = document.createElement('div');
+        container.className = "container";
+
+        const row = document.createElement('div');
+        row.className = "row";
+
+        // Closing Icon
+        const colCloseIcon = document.createElement('div');
+        colCloseIcon.className = "col-md-1";
+        colCloseIcon.innerHTML = "<span class='delete'>X</span>";
+
+        // Task Content
+        const colTaskContent = document.createElement('div');
+        colTaskContent.className = "col-md-10";
+        colTaskContent.style.display = "flex";
+        colTaskContent.style.justifyContent = "start";
+        colTaskContent.style.margin = "auto";
+        colTaskContent.style.flexDirection = "column";
+
+        const taskNameDiv = document.createElement('div');
+        taskNameDiv.className="new_task_name";
+        taskNameDiv.textContent = newTaskName.value;
+
+        const taskDetailsDiv = document.createElement('div');
+        taskDetailsDiv.style.maxHeight="0px";
+        taskDetailsDiv.style.display="none";
+        taskDetailsDiv.className = 'task_details';
+
+        taskDetailsDiv.innerHTML = `<span>${datepicker.value}</span><br><span>${newTaskDescription.value}</span>`;
+
+        colTaskContent.appendChild(taskNameDiv);
+        colTaskContent.appendChild(taskDetailsDiv);
+
+        // Checking Icon
+        const colCheckIcon = document.createElement('div');
+        colCheckIcon.className = "col-md-1";
+        colCheckIcon.innerHTML = "<span class='complete'>✔</span>";
+
+        // Assembling the row
+        row.appendChild(colCloseIcon);
+        row.appendChild(colTaskContent);
+        row.appendChild(colCheckIcon);
+
+        // Adding the row to the container
+        container.appendChild(row);
+
+        // Adding the container to the allTasksBox
+        allTasksBox.appendChild(container);
         newTaskName.value = "";
         newTaskDescription.value = "";
         newTaskDescription_wrapper.style.display = "none";
-
+        document.querySelector('.input_field_task_checkbox #duedate').checked=false;
+        datepicker.style.display="none";
     }
 }
 
 // Initialize the task creation process
-initializeTaskCreation();
 
 function validate() {
     if (document.querySelector('.input_field_task_checkbox #duedate').checked) {
