@@ -8,6 +8,7 @@ const newTaskDescription = document.querySelector(".new_task_wrapper .input_fiel
 const newTaskName = document.querySelector(".new_task_wrapper .input_fields .input_field_task_name #taskname");
 const closeIcon = document.querySelector(".new_task_wrapper .close_icon");
 const datepicker = document.querySelector('#datepicker');
+const finishedTasksBox = document.querySelector('.completed_tasks');
 
 closeIcon.addEventListener('click', function(){
     newTaskWrapper.style.display = "none";
@@ -29,6 +30,7 @@ function initializeTaskCreation() {
 
 // Event listeners for tasks
 allTasksBox.addEventListener('click', function(event) {
+    console.log(event.target);
     if (event.target.classList.contains('delete')) {
         removeTask(event.target);
     } else if (event.target.classList.contains('complete')) {
@@ -40,16 +42,24 @@ allTasksBox.addEventListener('click', function(event) {
 
 
 function removeTask(element) {
-    const parent = element.parentElement.parentElement;
-    parent.remove();
+    const parent = element.parentElement.parentElement.parentElement.parentElement;
+    const selectedTask = parent.querySelector(".new_task_name").textContent;
+    const message = "Möchtest du wirklich " + selectedTask + " löschen?";
+    var answer = confirm (message);
+    if (answer){
+        parent.remove();
+    }else{
+    }
 }
 
 function completeTask(element) {
-    const parent = element.parentElement.parentElement;
+    const parent = element.parentElement.parentElement.parentElement;
     if(parent.classList.contains('completed')){
         parent.classList.remove("completed");
     }else{
         parent.classList.add("completed");
+        parent.remove();
+        allTasksBox.appendChild(parent);
     }
 }
 
@@ -101,8 +111,15 @@ function submitNewTask() {
             <h4>Taskbeschreibung: </h4><span class="task_description">${newTaskDescription.value}</span>
         `;
 
+        const deleteAndModifySection =  document.createElement('div');
+        deleteAndModifySection.className = 'delete_section';
+        
+        deleteAndModifySection.innerHTML = `
+            <button class="delete">Löschen</div>
+        `
         colTaskContent.appendChild(taskNameDiv);
         colTaskContent.appendChild(taskDetailsDiv);
+        colTaskContent.appendChild(deleteAndModifySection);
 
         // Checking Icon
         const colCheckIcon = document.createElement('div');
