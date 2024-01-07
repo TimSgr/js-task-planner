@@ -1,6 +1,6 @@
 console.log("hello world");
 
-// Cache DOM elements
+// All needed DOM Elements
 const newTaskWrapper = document.querySelector(".new_task_wrapper");
 const allTasksBox = document.querySelector(".all_tasks");
 const newTaskDescription_wrapper = document.querySelector(".new_task_wrapper .input_fields .input_field_task_description");
@@ -10,6 +10,7 @@ const closeIcon = document.querySelector(".new_task_wrapper .close_icon");
 const datepicker = document.querySelector('#datepicker');
 const finishedTasksBox = document.querySelector('.completed_tasks');
 
+//
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
 var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -17,11 +18,15 @@ var yyyy = today.getFullYear();
 today = yyyy + '-' + mm + '-' + dd;
 var todayTimestamp=new Date(today).getTime() / 1000;
 
+// Start of the functions
+
+// Close Icon Functionality
 closeIcon.addEventListener('click', function(){
     newTaskWrapper.style.display = "none";
     allTasksBox.style.paddingTop = "0px";
 });
 
+// Show task creation box if button is clicked
 function initializeTaskCreation() {
     newTaskName.addEventListener("keyup", () => {
         if(newTaskName.value.trim() === ""){
@@ -35,7 +40,7 @@ function initializeTaskCreation() {
     allTasksBox.style.paddingTop = "25%";
 }
 
-// Event listeners for tasks
+// Event listeners for tasks functionality (delete/complete/expand)
 allTasksBox.addEventListener('click', function(event) {
     if (event.target.classList.contains('delete')) {
         removeTask(event.target);
@@ -55,7 +60,7 @@ finishedTasksBox.addEventListener('click', function(event) {
     }
 });
 
-
+// remove task functionality -> remove element after confirmation
 function removeTask(element) {
     const parent = element.parentElement.parentElement.parentElement.parentElement;
     const selectedTask = parent.querySelector(".new_task_name").textContent;
@@ -67,6 +72,7 @@ function removeTask(element) {
     }
 }
 
+// mark task as completed or uncompleted -> move it to completed task/open task section and add/remove class
 function completeTask(element) {
     const parent = element.parentElement.parentElement.parentElement;
     if(parent.classList.contains('completed')){
@@ -80,6 +86,7 @@ function completeTask(element) {
     }
 }
 
+// make task details expandable
 function expand_minimize_details(element){
     const parent = element.closest(".container");
     if(parent.classList.contains('expanded')){
@@ -89,6 +96,7 @@ function expand_minimize_details(element){
     }
 }
 
+// add new task to the open task board
 function submitNewTask() {
     if (newTaskName.value.trim() !== "") {
         newTaskWrapper.classList.add('hidden');
@@ -104,6 +112,7 @@ function submitNewTask() {
     }
 }
 
+// create task element object code
 function createTaskElement(taskName, dueDate, taskDescription) {
     const dateContent = calculateDateContent(dueDate);
     return `
@@ -132,6 +141,8 @@ function createTaskElement(taskName, dueDate, taskDescription) {
     `;
 }
 
+
+// reset the inputs
 function resetTaskInputs() {
     newTaskName.value = "";
     newTaskDescription.value = "";
@@ -141,12 +152,11 @@ function resetTaskInputs() {
 }
 
 function calculateDateContent(dueDate) {
-    // Deine Logik zur Berechnung des Datumsinhalts
-    // Zum Beispiel:
+    // TODO: add logic to determine how much time is left for task
     return `<h4>Fälligkeitsdatum:</h4><span>${dueDate}</span>`;
 }
-// Initialize the task creation process
 
+// set today date at default value for datepicker
 function validate() {
     if (document.querySelector('.input_field_task_checkbox #duedate').checked) {
         datepicker.style.display="block";
