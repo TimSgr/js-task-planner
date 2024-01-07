@@ -10,6 +10,13 @@ const closeIcon = document.querySelector(".new_task_wrapper .close_icon");
 const datepicker = document.querySelector('#datepicker');
 const finishedTasksBox = document.querySelector('.completed_tasks');
 
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0');
+var yyyy = today.getFullYear();
+today = yyyy + '-' + mm + '-' + dd;
+var todayTimestamp=new Date(today).getTime() / 1000;
+
 closeIcon.addEventListener('click', function(){
     newTaskWrapper.style.display = "none";
     allTasksBox.style.paddingTop = "0px";
@@ -30,7 +37,15 @@ function initializeTaskCreation() {
 
 // Event listeners for tasks
 allTasksBox.addEventListener('click', function(event) {
-    console.log(event.target);
+    if (event.target.classList.contains('delete')) {
+        removeTask(event.target);
+    } else if (event.target.classList.contains('complete')) {
+        completeTask(event.target);
+    } else if (event.target.classList.contains('new_task_name') || event.target.classList.contains('expand-icon')){
+        expand_minimize_details(event.target);
+    }
+});
+finishedTasksBox.addEventListener('click', function(event) {
     if (event.target.classList.contains('delete')) {
         removeTask(event.target);
     } else if (event.target.classList.contains('complete')) {
@@ -56,15 +71,17 @@ function completeTask(element) {
     const parent = element.parentElement.parentElement.parentElement;
     if(parent.classList.contains('completed')){
         parent.classList.remove("completed");
+        parent.remove();
+        allTasksBox.appendChild(parent);
     }else{
         parent.classList.add("completed");
         parent.remove();
-        allTasksBox.appendChild(parent);
+        finishedTasksBox.appendChild(parent);
     }
 }
 
 function expand_minimize_details(element){
-    const parent = element.parentElement.parentElement;
+    const parent = element.closest(".container");
     if(parent.classList.contains('expanded')){
         parent.classList.remove("expanded");
     }else{
@@ -74,86 +91,65 @@ function expand_minimize_details(element){
 
 function submitNewTask() {
     if (newTaskName.value.trim() !== "") {
-        newTaskWrapper.style.display = "none";
+        newTaskWrapper.classList.add('hidden');
         allTasksBox.style.paddingTop = "0px";
 
-        const container = document.createElement('div');
-        container.className = "container";
+        const taskHTML = createTaskElement(newTaskName.value, datepicker.value, newTaskDescription.value);
+        allTasksBox.innerHTML += taskHTML;
 
-        const row = document.createElement('div');
-        row.className = "row";
-
-        // Closing Icon
-        const colCloseIcon = document.createElement('div');
-        colCloseIcon.className = "col-md-1";
-        colCloseIcon.innerHTML = "<span class='complete'>✔</span>";
-
-        // Task Content
-        const colTaskContent = document.createElement('div');
-        colTaskContent.className = "col-md-10";
-        colTaskContent.style.display = "flex";
-        colTaskContent.style.justifyContent = "start";
-        colTaskContent.style.margin = "auto";
-        colTaskContent.style.flexDirection = "column";
-
-        const taskNameDiv = document.createElement('div');
-        taskNameDiv.className="new_task_name";
-        taskNameDiv.textContent = newTaskName.value;
-
-        const taskDetailsDiv = document.createElement('div');
-        taskDetailsDiv.style.maxHeight="0px";
-        taskDetailsDiv.style.display="none";
-        taskDetailsDiv.className = 'task_details';
-
-        taskDetailsDiv.innerHTML = `
-            <h4>Fälligkeitsdatum: </h4><span>${datepicker.value}</span>
-            <br>
-            <h4>Taskbeschreibung: </h4><span class="task_description">${newTaskDescription.value}</span>
-        `;
-
-        const deleteAndModifySection =  document.createElement('div');
-        deleteAndModifySection.className = 'delete_section';
-        
-        deleteAndModifySection.innerHTML = `
-            <button class="delete">Löschen</div>
-        `
-        colTaskContent.appendChild(taskNameDiv);
-        colTaskContent.appendChild(taskDetailsDiv);
-        colTaskContent.appendChild(deleteAndModifySection);
-
-        // Checking Icon
-        const colCheckIcon = document.createElement('div');
-        colCheckIcon.className = "col-md-1 expand-icon";
-        colCheckIcon.innerHTML = "<img class='expand-icon' src='/assets/img/Vector-1.svg' >";
-
-        // Assembling the row
-        row.appendChild(colCloseIcon);
-        row.appendChild(colTaskContent);
-        row.appendChild(colCheckIcon);
-
-        // Adding the row to the container
-        container.appendChild(row);
-
-        // Adding the container to the allTasksBox
-        allTasksBox.appendChild(container);
-        newTaskName.value = "";
-        newTaskDescription.value = "";
-        newTaskDescription_wrapper.style.display = "none";
-        document.querySelector('.input_field_task_checkbox #duedate').checked=false;
-        datepicker.style.display="none";
+        resetTaskInputs();
+        newTaskWrapper.style.display = "none";      
+        document.querySelector('.input_field_task_checkbox #duedate').checked = false;
+  
     }
 }
 
+function createTaskElement(taskName, dueDate, taskDescription) {
+    const dateContent = calculateDateContent(dueDate);
+    return `
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1">
+                    <span class='complete'>✔</span>
+                </div>
+                <div class="col-md-10" style="display: flex; justify-content: start; margin: auto; flex-direction: column;">
+                    <div class="new_task_name">${taskName}</div>
+                    <div class="task_details">
+                        ${dateContent}
+                        <br>
+                        <h4>Taskbeschreibung:</h4>
+                        <span class="task_description">${taskDescription}</span>
+                    </div>
+                    <div class="delete_section">
+                        <button class="delete">Löschen</button>
+                    </div>
+                </div>
+                <div class="col-md-1 expand-icon">
+                    <img class='expand-icon' src='/assets/img/Vector-1.svg'>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function resetTaskInputs() {
+    newTaskName.value = "";
+    newTaskDescription.value = "";
+    newTaskDescription_wrapper.classList.add('hidden');
+    datepicker.classList.add('hidden');
+    document.querySelector('.input_field_task_checkbox #duedate').checked = false;
+}
+
+function calculateDateContent(dueDate) {
+    // Deine Logik zur Berechnung des Datumsinhalts
+    // Zum Beispiel:
+    return `<h4>Fälligkeitsdatum:</h4><span>${dueDate}</span>`;
+}
 // Initialize the task creation process
 
 function validate() {
     if (document.querySelector('.input_field_task_checkbox #duedate').checked) {
         datepicker.style.display="block";
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-        today = yyyy + '-' + mm + '-' + dd;
         datepicker.value=today;
     } else {
         datepicker.style.display="none";
